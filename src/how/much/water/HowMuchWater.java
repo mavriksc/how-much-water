@@ -6,7 +6,6 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class HowMuchWater {
 
-    private static List<Integer> w;
     private static final int N = 240;
     private static final int H = 40;
     
@@ -88,7 +87,7 @@ public class HowMuchWater {
         for (int i = 0; i < 10; i++) {
 
             int totVolume = 0;
-            w = initWorld();
+            List<Integer> w = initWorld();
 
             List<List<Integer>> cups = getCups(w, 0);
             System.out.println("cups : " + cups);
