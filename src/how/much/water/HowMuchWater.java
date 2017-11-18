@@ -6,7 +6,11 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class HowMuchWater {
 
-    protected static List<Integer> w;
+    private static List<Integer> w;
+    private static final int N = 240;
+    private static final int H = 40;
+    
+    private static int count = 0;
 
     public static List<List<Integer>> getCups(List<Integer> world, int offset) {
         boolean isDecreasing = false;
@@ -19,6 +23,7 @@ public class HowMuchWater {
         List<List<Integer>> cups = new ArrayList<>();
 
         for (int i = offset + 1; i < world.size(); i++) {
+            count++;
             if (world.get(i - 1) > world.get(i)) {
                 isDecreasing = true;
                 isIncreasing = false;
@@ -63,6 +68,7 @@ public class HowMuchWater {
         int waterLevel = Math.min(cup.get(0), cup.get(cup.size() - 1));
         int water = 0;
         for (int i = 1; i < cup.size() - 1; i++) {
+            count++;
             water += waterLevel - cup.get(i);
         }
         return water;
@@ -70,8 +76,8 @@ public class HowMuchWater {
 
     public static List<Integer> initWorld() {
         List<Integer> w = new ArrayList<>();
-        for (int i = 0; i < 40; i++) {
-            w.add(ThreadLocalRandom.current().nextInt(10));
+        for (int i = 0; i < N; i++) {
+            w.add(ThreadLocalRandom.current().nextInt(H));
         }
         System.out.println("World: " + w);
         return w;
@@ -89,7 +95,12 @@ public class HowMuchWater {
             for (List<Integer> cup : cups) {
                 totVolume += howMuchWaterInTheCup(w.subList(cup.get(0), cup.get(1) + 1));
             }
+            float eff = (float)count/(float) N;
+
+            System.out.printf("Count : %d%n", count);
+            System.out.printf("Efficiency : %.2f%n", eff);
             System.out.println("total volume is : " + totVolume);
+            count = 0;
         }
     }
 
