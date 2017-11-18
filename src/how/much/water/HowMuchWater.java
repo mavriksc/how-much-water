@@ -1,7 +1,6 @@
 package how.much.water;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -9,7 +8,7 @@ public class HowMuchWater {
 
     protected static List<Integer> w;
 
-    public static List<List<Integer>> getCups(List<Integer> world) {
+    public static List<List<Integer>> getCups(List<Integer> world, int offset) {
         boolean isDecreasing = false;
         boolean isIncreasing = false;
         boolean isCupStarted = false;
@@ -19,7 +18,7 @@ public class HowMuchWater {
         int pCupEndHeight = 0;
         List<List<Integer>> cups = new ArrayList<>();
 
-        for (int i = 1; i < world.size(); i++) {
+        for (int i = offset + 1; i < world.size(); i++) {
             if (world.get(i - 1) > world.get(i)) {
                 isDecreasing = true;
                 isIncreasing = false;
@@ -41,7 +40,7 @@ public class HowMuchWater {
                     cup.add(cupStart);
                     cup.add(i);
                     cups.add(cup);
-                    cups.addAll(getCups(world.subList(i, world.size())));
+                    cups.addAll(getCups(world, i));
                     return cups;
                 } else if (world.get(i) > pCupEndHeight) {
                     pCupEnd = i;
@@ -54,7 +53,7 @@ public class HowMuchWater {
             cup.add(cupStart);
             cup.add(pCupEnd);
             cups.add(cup);
-            cups.addAll(getCups(world.subList(pCupEnd, world.size())));
+            cups.addAll(getCups(world, pCupEnd));
             return cups;
         }
         return cups;
@@ -71,28 +70,27 @@ public class HowMuchWater {
 
     public static List<Integer> initWorld() {
         List<Integer> w = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 40; i++) {
             w.add(ThreadLocalRandom.current().nextInt(10));
         }
-        System.out.println(w);
+        System.out.println("World: " + w);
         return w;
     }
 
     public static void main(String[] args) {
 
-         for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
 
-        int totVolume = 0;
-        w = initWorld();
+            int totVolume = 0;
+            w = initWorld();
 
-        List<List<Integer>> cups = getCups(w);
-        int offset = 0;
-        for (List<Integer> cup : cups) {
-            totVolume += howMuchWaterInTheCup(w.subList(cup.get(0) + offset, cup.get(1) + offset + 1));
-            offset += cup.get(1);
+            List<List<Integer>> cups = getCups(w, 0);
+            System.out.println("cups : " + cups);
+            for (List<Integer> cup : cups) {
+                totVolume += howMuchWaterInTheCup(w.subList(cup.get(0), cup.get(1) + 1));
+            }
+            System.out.println("total volume is : " + totVolume);
         }
-        System.out.println("total volume is : " + totVolume);
-         }
     }
 
     private HowMuchWater() {
